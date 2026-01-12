@@ -21,6 +21,10 @@ app.use('/api/auth',auth)
 const profile = require('./routes/profile')
 app.use('/api/profile',profile)
 
+// Staff
+const member = require('./routes/Staff/member')
+app.use('/api/Staff/member',member)
+
 app.use( (req,res) => res.status(404).json({ message:'ปิดปรับปรุง!' }) )
 
 app.listen(3001 , () => console.log("Server Running On Port 3001"))
