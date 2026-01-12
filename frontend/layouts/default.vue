@@ -23,6 +23,7 @@
 
 <script setup lang="ts">
 import axios from 'axios';
+import {api} from '../API/api'
 import { useDisplay } from 'vuetify';
 const {mdAndDown} = useDisplay()
 const isMobile = computed(() => mdAndDown.value)
@@ -57,7 +58,7 @@ const fetchUser = async () =>{
         return await navigateTo('/',{replace: true})
     }
     try{
-        const res = await axios.get(`http://localhost:3001/profile`,{headers:{Authorization:`Bearer ${token}`}})
+        const res = await axios.get(`${api}/profile`,{headers:{Authorization:`Bearer ${token}`}})
         user.value = res.data
     }catch(err){
         console.error('Error Get User',err)
