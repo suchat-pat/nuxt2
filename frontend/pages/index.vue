@@ -45,7 +45,8 @@ const Login = async () => {
         localStorage.setItem('token',res.data.token)
         const useRole = res.data.role
         if(useRole === 'ฝ่ายบุคลากร') router.push('/Staff')
-        else if(useRole === 'กรรมการประเมิน') router.push('/Evaluatee')
+        else if(useRole === 'กรรมการประเมิน') router.push('/Committee')
+        else if(useRole === 'ผู้รับการประเมินผล') router.push('/Evaluatee')
     }catch(err){}
 }
 
