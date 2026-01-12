@@ -11,8 +11,9 @@
                     <v-form @submit.prevent="Login">
                         <v-text-field v-model="username" label="ชื่อผู้ใช้" prepend-inner-icon="mdi-account"></v-text-field>
                         <v-text-field v-model="password" type="password" label="รหัสผ่าน" prepend-inner-icon="mdi-lock"></v-text-field>
-                        <v-text-field v-model="role" :itemss="g" label="ประเภทสมาชิก" prepend-inner-icon="mdi-account-group"></v-text-field>
+                        <v-select v-model="role" :items="g" label="ประเภทสมาชิก" prepend-inner-icon="mdi-account-group" />
                         <v-btn class="text-white bg" type="submit" block>เข้าสู่ระบบ</v-btn>
+                        <center><nuxt-link to="/regis" class="text-blue"><small>สมัครสมาชิก</small></nuxt-link></center>
                     </v-form>
                 </v-container>
             </v-card>
@@ -47,7 +48,10 @@ const Login = async () => {
         if(useRole === 'ฝ่ายบุคลากร') router.push('/Staff')
         else if(useRole === 'กรรมการประเมิน') router.push('/Committee')
         else if(useRole === 'ผู้รับการประเมินผล') router.push('/Evaluatee')
-    }catch(err){}
+    }catch(err:any){
+        console.error("Login Failed",err)
+        error.value = err.response?.data?.message || 'เข้าสู่ระบบไม่สำเร็จ'
+    }
 }
 
 </script>
