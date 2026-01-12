@@ -14,7 +14,8 @@ app.use(express.json())
 app.use(fileupload())
 app.use('/uploads',express.static(path.join('uploads')))
 
-
+const auth = require('./routes/auth')
+app.use('/api/auth',auth)
 // API
 
 app.use( (req,res) => res.status(404).json({ message:'ปิดปรับปรุง!' }) )
