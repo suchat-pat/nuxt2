@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
     <v-container fluid class="fill-height">
         <v-row justify="center" align="center">
             <v-col cols="12" md="8" lg="6">
@@ -92,4 +93,17 @@ const saveMember = async () =>{
 .text-maroon{
     color: #7d0c14;
 }
+=======
+    <div>
+5555
+    </div>
+</template>
+
+<script setup lang="ts">
+
+</script>
+
+<style scoped>
+
+>>>>>>> 39dee47b680b01940e2db6927237b3812943fae3
 </style>
