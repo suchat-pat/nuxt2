@@ -11,18 +11,18 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - CHOKIDAR_USE_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
     networks: ["app-network"]
 
   backend:
-    build: ./frontend
+    build: ./backend
     depends_on:
       - mysql
     container_name: Backend_Container
     ports: ["3001:3001"]
     restart: always
     volumes:
-      - ./backend:/node_module
+      - ./backend:/app
       - /app/node_modules
     environment:
       DB_HOST: mysql
@@ -30,7 +30,7 @@ services:
       DB_PASSWORD: 1234
       DB_NAME: nuxt2
       JWT_SECRET: ntc&&1234
-      CHOKIDAR_USE_POLLING: true
+      CHOKIDAR_USEPOLLING: true
     networks: ["app-network"]
 
   phpmyadmin:
