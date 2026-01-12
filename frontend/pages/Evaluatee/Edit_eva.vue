@@ -28,7 +28,7 @@
                                     <v-text-field label="ยืนยันรหัสผ่าน" v-model="confirmPassword" type="password" :error-messages="error.confirmPassword"></v-text-field>
                                 </v-col>
                                 <v-col cols="12">
-                                    <v-select label="เลือกประเภทสมาชิก" :items="['ฝ่ายบุคลากร','กรรมการประเมิน','ผู้รับการประเมินผล']" v-model="form.role" :error-messages="error.role"></v-select>
+                                    <v-alert>{{ form.role }}</v-alert>
                                 </v-col>
                                 <v-col cols="12" class="text-center">
                                     <v-btn type="submit" color="success">สมัคร</v-btn>&nbsp;&nbsp;&nbsp;&nbsp;<v-btn type="reset" color="error">ยกเลิก</v-btn>
@@ -45,9 +45,6 @@
 <script setup lang="ts">
 import axios from 'axios'
 import {eva} from '../API/api'
-definePageMeta({
-    layout: false
-})
 const token = process.client ? localStorage.getItem('token') : null
 const form = ref({
     first_name:'',
@@ -81,7 +78,7 @@ const saveMember = async () =>{
     if(!vaildateForm())return
     if(form.value.password && form.value.password.trim()){
         try{
-            await axios.post(`${eva}/Eva/edit_eva/editpass`,form.value,{headers:{Authorization:`Bearer ${token}`}})
+            await axios.post(`${eva}/edit_eva/editpass`,form.value,{headers:{Authorization:`Bearer ${token}`}})
             alert('แก้ไขสำเร็จ')
             localStorage.removeItem('token')
             navigateTo('/')
@@ -90,7 +87,7 @@ const saveMember = async () =>{
         }
     }else{
         try{
-            await axios.post(`${eva}/Eva/edit_eva/editname`,form.value,{headers:{Authorization:`Bearer ${token}`}})
+            await axios.post(`${eva}/edit_eva/editname`,form.value,{headers:{Authorization:`Bearer ${token}`}})
             alert('แก้ไขสำเร็จ')
             localStorage.removeItem('token')
             navigateTo('/')
@@ -101,7 +98,7 @@ const saveMember = async () =>{
 }
 const fetchUser = async () =>{
     try{
-        const res = await axios.get(`${eva}/Eva/edit_eva`,{headers:{Authorization:`Bearer ${token}`}})
+        const res = await axios.get(`${eva}/edit_eva`,{headers:{Authorization:`Bearer ${token}`}})
         form.value = res.data
     }catch(err){
         console.error('Error Get User',err)
