@@ -31,7 +31,7 @@
                                     <v-alert>{{ form.role }}</v-alert>
                                 </v-col>
                                 <v-col cols="12" class="text-center">
-                                    <v-btn type="submit" color="success">สมัคร</v-btn>&nbsp;&nbsp;&nbsp;&nbsp;<v-btn type="reset" color="error">ยกเลิก</v-btn>
+                                    <v-btn type="submit" color="success">แก้ไข</v-btn>&nbsp;&nbsp;&nbsp;&nbsp;<v-btn type="reset" color="error">ยกเลิก</v-btn>
                                 </v-col>
                             </v-row>
                         </v-form>
@@ -66,7 +66,7 @@ function vaildateForm(){
     else if(!emailReget.test(f.email.trim()))error.value.email='รูปแบบอีเมลไม่ถูกต้อง'
     if(!f.username.trim())error.value.username='กรุณากรอกชื่อผู้ใช้'
     else if(f.username.trim().length < 4)error.value.username='ต้องมีอย่างน้อย 4 ตัวอักษร'
-    if(f.password.trim()){
+    if(f.password && f.password.trim()){
         if(f.password.trim().length < 6)error.value.password='ต้องมีอย่างน้อย 6 ตัวอักษร'
         if(!confirmPassword.value.trim())error.value.confirmPassword='กรุณายืนยันรหัสผ่าน'
         else if(confirmPassword.value.trim() != f.password.trim())error.value.confirmPassword='รหัสผ่านไม่ตรงกัน'
@@ -78,21 +78,21 @@ const saveMember = async () =>{
     if(!vaildateForm())return
     if(form.value.password && form.value.password.trim()){
         try{
-            await axios.post(`${eva}/edit_eva/editpass`,form.value,{headers:{Authorization:`Bearer ${token}`}})
+            await axios.put(`${eva}/edit_eva/editpass`,form.value,{headers:{Authorization:`Bearer ${token}`}})
             alert('แก้ไขสำเร็จ')
             localStorage.removeItem('token')
             navigateTo('/')
         }catch(err){
-            console.error('Error Post Member',err)
+            console.error('Error PUT User',err)
         }
     }else{
         try{
-            await axios.post(`${eva}/edit_eva/editname`,form.value,{headers:{Authorization:`Bearer ${token}`}})
+            await axios.put(`${eva}/edit_eva/editname`,form.value,{headers:{Authorization:`Bearer ${token}`}})
             alert('แก้ไขสำเร็จ')
             localStorage.removeItem('token')
             navigateTo('/')
         }catch(err){
-            console.error('Error Post Member',err)
+            console.error('Error PUT User',err)
         }
     }
 }
