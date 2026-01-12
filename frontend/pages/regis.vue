@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 import axios from 'axios'
+import {api} from '../API/api'
 definePageMeta({
     layout: false
 })
@@ -79,7 +80,7 @@ function vaildateForm(){
 const saveMember = async () =>{
     if(!vaildateForm())return
     try{
-        await axios.post(`http://localhost:3001/auth/regis`,form.value)
+        await axios.post(`${api}/auth/regis`,form.value)
         alert('สมัครสำเร็จ')
         navigateTo('/')
     }catch(err){
