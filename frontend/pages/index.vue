@@ -1,5 +1,7 @@
 <template>
-    <v-container></v-container>
+    <v-container>
+        <v-row justify="center"></v-row>
+    </v-container>
 </template>
 
 <script setup lang="ts">
