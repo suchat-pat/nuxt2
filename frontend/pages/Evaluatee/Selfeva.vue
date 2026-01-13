@@ -2,7 +2,7 @@
     <v-container>
         <v-row>
             <v-col cols="12">
-                <v-form @submit.prevent="saveScore">
+                <v-form v-if="user.status_eva === 1" @submit.prevent="saveScore">
                     <h1 class="text-h5 font-weight-bold">แบบประเมิน</h1>
                     <v-card class="mt-2 pa-2">
                         <p>ชื่อ - นามสกุล : {{ user.first_name }} {{ user.last_name }} </p>
@@ -15,7 +15,7 @@
                                 <v-row v-for="(indicate,index2) in topic.indicates" :key="indicate.id_indicate">
                                     <v-col cols="12">
                                         <p>
-                                            {{ index1+1 }}.{{ index2 }} {{ indicate.name_indicate }} น้ำหนักคะแนน : {{ indicate.point_indicate }} คะแนนเต็ม : {{ indicate.point_indicate*4 }} รายละเอียดตัวชี้วัด : {{ indicate.detail_indicate }}
+                                            {{ index1+1 }}.{{ index2+1 }} {{ indicate.name_indicate }} น้ำหนักคะแนน : {{ indicate.point_indicate }} คะแนนเต็ม : {{ indicate.point_indicate*4 }} รายละเอียดตัวชี้วัด : {{ indicate.detail_indicate }}
                                         </p>
                                         <v-textarea label="คำอธิบายเพิ่มเติม(ถ้ามี)" v-model="indicate.detail_eva" rows="2"></v-textarea>
                                         <v-file-input label="ไฟล์" @change="onFileChange($event,topic.id_topic,indicate.id_indicate)" accept="image/*.pdf" ></v-file-input>
@@ -26,7 +26,12 @@
                             </v-card>
                         </v-col>
                     </v-row>
+                    <div class="mt-6 text-center">
+                        <v-btn type="submit" color="success">บันทึกคะแนน</v-btn><br><br>
+                    </div>
                 </v-form>
+                <v-alert v-else-if="user.status_eva === 2 || user.status_eva === 3" type="success">คุณกรอกแบบประเมินแล้ว</v-alert>
+                <v-alert v-else type="warning">ยังไม่มีแบบประเมิน</v-alert>
             </v-col>
         </v-row>
     </v-container>
@@ -50,7 +55,7 @@ const fetchTopic = async () =>{
     try{
         const res = await axios.get(`${eva}/selfeva/indicate`,{headers:{Authorization:`Bearer ${token}`}})
         topics.value = res.data
-        console.log()
+        // console.log('topic:',topics.value)
     }catch(err){
         console.error('Error Get Topic',err)
     }
@@ -59,8 +64,36 @@ const fetchTopic = async () =>{
 onMounted(async () => {
     await Promise.all([fetchTopic(),fetchUser()])
 })
+const fileMap = ref<Record<string,string>>({})
+const onFileChange = (event:Event,id_topic:number,id_indicate:number) =>{
+    const file = (event.target as HTMLInputElement)?.files?.[0]
+    if(!file)return
+    fileMap.value[`${id_topic}-${id_indicate}`] = file
+}
 const saveScore = async () =>{
-    
+    const formData = new FormData()
+    const allScore = topics.value.flatMap(topic =>
+        topic.indicates.map((i:any) =>{
+            const key = `${topic.id_topic}-${i.id_indicate}`
+            const file = fileMap.value[key]
+            if(file) formData.append(`file_${key}`,file)
+            return{
+                id_topic:topic.id_topic,
+                id_indicate:i.id_indicate,
+                score:i.score,
+                detail_eva:i.detail_eva,
+                file_key:file ? `file_${key}` : null
+            }
+        })
+    )
+    formData.append('scores',JSON.stringify(allScore))
+    try{
+        await axios.post(`${eva}/selfeva/savescore`,formData,{headers:{Authorization:`Bearer ${token}`}})
+        alert('บันทึกคะแนนสำเร็จ')
+        await Promise.all([fetchTopic(),fetchUser()])
+    }catch(err){
+        console.log('Error POST Score',err)
+    }
 }
 
 </script>

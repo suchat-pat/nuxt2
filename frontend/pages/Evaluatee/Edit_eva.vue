@@ -76,25 +76,15 @@ function vaildateForm(){
 }
 const saveMember = async () =>{
     if(!vaildateForm())return
-    if(form.value.password && form.value.password.trim()){
-        try{
-            await axios.put(`${eva}/edit_eva/editpass`,form.value,{headers:{Authorization:`Bearer ${token}`}})
-            alert('แก้ไขสำเร็จ')
-            localStorage.removeItem('token')
-            navigateTo('/')
-        }catch(err){
-            console.error('Error PUT User',err)
-        }
-    }else{
-        try{
-            await axios.put(`${eva}/edit_eva/editname`,form.value,{headers:{Authorization:`Bearer ${token}`}})
-            alert('แก้ไขสำเร็จ')
-            localStorage.removeItem('token')
-            navigateTo('/')
-        }catch(err){
-            console.error('Error PUT User',err)
-        }
+    try{
+        await axios.put(`${eva}/edit_eva`,form.value,{headers:{Authorization:`Bearer ${token}`}})
+        alert('แก้ไขสำเร็จ')
+        localStorage.removeItem('token')
+        navigateTo('/')
+    }catch(err){
+        console.error('Error PUT User',err)
     }
+    
 }
 const fetchUser = async () =>{
     try{
